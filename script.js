@@ -93,13 +93,14 @@ const products = [
      let productDescription = product.description;
      let productPicLink = product.imageUrl;
      let productPic = document.createElement ('img');
+     
     
 
     
 
-     document.getElementById('test').appendChild(item)
+     document.getElementById('items').appendChild(item)
      item.setAttribute('id', productId);
-     item.classList.add("items")
+     item.classList.add("items_")
      document.getElementById(productId).appendChild(article);
      productPic.setAttribute('src', '../images/' + productPicLink);
      productPic.classList.add('itemPic');
@@ -109,6 +110,7 @@ const products = [
      productLink.innerHTML = productDescription;
      document.getElementById(productId).appendChild(productLink);
      title.innerHTML = product.name;
+     
  }
 
 
