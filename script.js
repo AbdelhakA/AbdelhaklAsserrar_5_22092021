@@ -1,5 +1,3 @@
-console.log('script.js ok')
-
 
 const products = [
     {
@@ -82,36 +80,41 @@ const products = [
 
 
 
-   for (product of products) {
-     //Variables//
-     let productId = product._id;
-     let link = './product.html?id=' + productId;
-     let item = document.createElement('section')
-     let productLink = document.createElement("a");
-     let article = document.createElement('article');
-     let title = document.createElement('h3');
-     let productDescription = product.description;
-     let productPicLink = product.imageUrl;
-     let productPic = document.createElement ('img');
-     
-    
 
-    
 
-     document.getElementById('items').appendChild(item)
-     item.setAttribute('id', productId);
-     item.classList.add("items_")
-     document.getElementById(productId).appendChild(article);
-     productPic.setAttribute('src', '../images/' + productPicLink);
-     productPic.classList.add('itemPic');
-     document.getElementById(productId).appendChild(title);
-     document.getElementById(productId).appendChild(productPic);
-     productLink.setAttribute('href', link);
-     productLink.innerHTML = productDescription;
-     document.getElementById(productId).appendChild(productLink);
-     title.innerHTML = product.name;
-     
- }
+for (product of products) {
+  //Variables//
+  let productId = product._id;
+  let link = './product.html?id=' + productId;
+  let item = document.createElement('section')
+  let productLink = document.createElement("a");
+  let article = document.createElement('article');
+  let title = document.createElement('h3');
+  let productDescription = product.description;
+  let productPicLink = product.imageUrl;
+  let productPic = document.createElement ('img');
+  
+ 
+
+ 
+
+  document.getElementById('items').appendChild(item)
+  item.setAttribute('id', productId);
+  item.classList.add("items_")
+  document.getElementById(productId).appendChild(article);
+  productPic.setAttribute('src', '../images/' + productPicLink);
+  productPic.classList.add('itemPic');
+  document.getElementById(productId).appendChild(title);
+  document.getElementById(productId).appendChild(productPic);
+  productLink.setAttribute('href', link);
+  productLink.innerHTML = productDescription;
+  document.getElementById(productId).appendChild(productLink);
+  title.innerHTML = product.name;
+  
+}
+
+console.log(products);
+
 
 
 
