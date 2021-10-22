@@ -1,7 +1,24 @@
-fetch("http://localhost:3000/api/products")
-    .then(res => res.json())
-    .then(data => console.log(data));
+(async function () {
+    const items = await getItem()
   
+    for (item of items) {
+        displayItem(item)
+    }
+
+  })()
+  
+  function getItem() {
+    return fetch("http://localhost:3000/api/products")
+        .then(function (httpBodyResponse) {
+            return httpBodyResponse.json()
+        })
+        .then(function (item) {
+            return item
+        })
+        .catch(function (error) {
+            alert(error)
+        })
+  }
   
   for (product of products) {
 
@@ -16,7 +33,7 @@ fetch("http://localhost:3000/api/products")
     let colorOption = document.getElementById('item_color');
     
     
-    
+     
     
 
     if (id === productId) {

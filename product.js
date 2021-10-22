@@ -94,35 +94,27 @@ let id  = url.searchParams.get("id");
     let image = document.getElementById('item_pic');
     let colors = product.colors;
     let colorPlace = document.createElement('option');
-    console.log(colorPlace);
-    let colorOption = document.getElementById('item_color');
+   
     
     
     
 
     if (id === productId) {
 
-      for (var i = 0 ; i < colors.length ; i++) {
-        colorOption.value = colors[i];
-        colorOption.innerText = colors[i];
-        
-        
+      for (let index = 0; index < colors.length; index++) {
+        // const color = colors[index];
+        // colorPlace.setAttribute('value', colors[index]);
+        // colorPlace.innerText = colors[index];
+        // document.getElementById('colors').appendChild(colorPlace);
+        // console.log(colorPlace);
+
+        var color = new Option(colors[index, index])
+        console.log(color);
+
+        colors.options.add(color);
       }
 
-      for (var i = 0 ; i < colors.length ; i++) {
-        colorPlace.value = colors[i];
-        colorPlace.innerText = colors;
-        
-        
-      }
-
-      // for (let option; option < colors.length; option++) {
-      //   colorPlace.value = colors[i];
-      //   colorPlace.innerText = colors[i];
-      //   console.log(colorPlace);
-      // }
-
-
+      
 
 
       
