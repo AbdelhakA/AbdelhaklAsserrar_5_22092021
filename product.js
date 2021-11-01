@@ -108,6 +108,8 @@ let id  = url.searchParams.get("id");
         // document.getElementById('colors').appendChild(colorPlace);
         // console.log(colorPlace);
 
+        
+
         var color = new Option(colors[index, index])
         console.log(color);
 

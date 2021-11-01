@@ -6,6 +6,8 @@
     }
 
   })()
+
+  // Récupère l'API
   
   function getArticles() {
     return fetch("http://localhost:3000/api/products")
@@ -19,11 +21,13 @@
             alert(error)
         })
   }
+
+  // Afficher ce que j'ai recup
   
   function displayArticle(article) {
   
     document.getElementById("items").innerHTML += `
-        <a href="./product.html?${article._id}">
+        <a href="./product.html?id=${article._id}">
             <article>
                 <img src="${article.imageUrl}" alt="${article.altTxt}">
                 <h3 class ="productName">${article.name}</h3>

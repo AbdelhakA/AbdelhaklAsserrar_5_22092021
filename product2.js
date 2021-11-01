@@ -3,6 +3,7 @@
   
     for (item of items) {
        displayItem(item)
+       
     }
     
   })()
@@ -13,22 +14,22 @@
             return httpBodyResponse.json()
         })
         .then(function (items) {
-            return items
+            return items;
         })
         .catch(function (error) {
             alert(error)
         })
   }
-
-  function displayItem (item) { 
+  
+  function displayItem(item) { 
     let productId = item._id; 
-    let price = document.getElementById('price');
-    let description = document.getElementById('description');
-    let productPicLink = item.imageUrl
-    let image = document.getElementById('item_pic');
-    let colors = item.colors;
-    let colorPlace = document.createElement('option');
-    let colorOption = document.getElementById('item_color');
+    // let price = document.getElementById('price');
+    // let description = document.getElementById('description');
+    // let productPicLink = item.imageUrl
+    // let image = document.getElementById('item_pic');
+    // let colors = item.colors;
+    // let colorPlace = document.createElement('option');
+    // let colorOption = document.getElementById('item_color');
 
 
     
@@ -38,14 +39,17 @@
     let url = new URL(str); 
     let id  = url.searchParams.get("id"); 
     
-
+    console.log(productId)
+    console.log(id)
   if (productId === id) {
-     console.log(item);
+
     // price.innerHTML = 
     // description.innerHTML = product.description;
     // image.setAttribute('src', '../images/' + productPicLink);
 
-    `<div class="item__img" >
+    document.getElementById("productItem").innerHTML += `
+    <article>
+    <div class="item__img" >
               <img id="item_pic" src="${item.imageUrl}" alt="">
             </div>
             <div class="item__content">
@@ -74,7 +78,8 @@
                   <label for="itemQuantity">Nombre d'article(s) (1-100) :</label>
                   <input type="number" name="itemQuantity" min="1" max="100" value="0" id="quantity">
                 </div>
-              </div>`
-            
+              </div>
+              </article>`
+      
   }
 }    
