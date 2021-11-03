@@ -3,7 +3,6 @@
   
     for (item of items) {
        displayItem(item)
-       
     }
     
   })()
@@ -23,29 +22,13 @@
   
   function displayItem(item) { 
     let productId = item._id; 
-    // let price = document.getElementById('price');
-    // let description = document.getElementById('description');
-    // let productPicLink = item.imageUrl
-    // let image = document.getElementById('item_pic');
-    // let colors = item.colors;
-    // let colorPlace = document.createElement('option');
-    // let colorOption = document.getElementById('item_color');
-
-
-    
-    
-     
     let str = window.location.href;
     let url = new URL(str); 
     let id  = url.searchParams.get("id"); 
     
-    console.log(productId)
-    console.log(id)
+    
   if (productId === id) {
 
-    // price.innerHTML = 
-    // description.innerHTML = product.description;
-    // image.setAttribute('src', '../images/' + productPicLink);
 
     document.getElementById("productItem").innerHTML += `
     <article>
