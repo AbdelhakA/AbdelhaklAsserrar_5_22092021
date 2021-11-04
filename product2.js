@@ -65,4 +65,11 @@
               </article>`
       
   }
+
+  function displayColor(color) {   
+    document.getElementById("colors").innerHTML += `
+        <option value="${color}">${color}</option>
+    `
+}
+
 }    
