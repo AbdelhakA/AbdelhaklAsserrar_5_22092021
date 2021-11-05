@@ -1,10 +1,16 @@
 (async function () {
     const items = await getItems()
-  
+    
     for (item of items) {
        displayItem(item)
+       
     }
+   const colors = item.colors;
+   
     
+   for (color of colors) {
+    displayColor(color)
+   }
   })()
   
   function getItems() {
@@ -51,8 +57,8 @@
                 <div class="item__content__settings__color">
                   <label for="color-select">Choisir une couleur :</label>
                   <select name="color-select" id="colors">
-                      <option value="${item.colors}">${item.colors}</option>
-                      
+                      <option>choisissez une couleur</option>
+                     
                       
                   </select>
                 </div>
@@ -61,15 +67,20 @@
                   <label for="itemQuantity">Nombre d'article(s) (1-100) :</label>
                   <input type="number" name="itemQuantity" min="1" max="100" value="0" id="quantity">
                 </div>
+                <div class="item__content__addButton">
+            <button id="addToCart">Ajouter au panier</button>
+        </div>
+
               </div>
               </article>`
       
   }
 
-  function displayColor(color) {   
-    document.getElementById("colors").innerHTML += `
-        <option value="${color}">${color}</option>
-    `
-}
-
+  
 }    
+
+function displayColor(color) {  
+  document.getElementById("colors").innerHTML += `
+      <option value="${color}">${color}</option>
+  `
+}
