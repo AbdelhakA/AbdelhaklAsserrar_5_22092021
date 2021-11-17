@@ -1,17 +1,37 @@
 (async function () {
     const items = await getItems()
+    const colors = item.colors;
     
     for (item of items) {
        displayItem(item)
        
     }
-   const colors = item.colors;
-   
-    
+     
    for (color of colors) {
-    displayColor(color)
+    displayColor(color);
    }
+
+   const addCart = document.getElementById('addToCart');
+    addCart.addEventListener('click', function() { //Cette fonction ce déclenche quand l'utilisateur clique sur ajouter au panier
+        var selectElem = document.getElementById('colors');
+        var index = selectElem.selectedIndex;
+        var idArticle = article._id;
+        var quantity = document.getElementById('quantity').value;
+
+        if(index != 0 && quantity > 0) { //on vérifie que la couleur a été choisie et que la quantitée n'est pas à 0
+            console.log('top')
+            addPanier(index, colors, idArticle, quantity);
+            verifOrdre();
+        }
+        else {
+            console.log('nop')
+            alert('il faut choisir une couleur et avoir au moins un article pour commander !')
+            return (1);
+        }
+    });
   })()
+
+
   
   function getItems() {
     return fetch("http://localhost:3000/api/products")
@@ -84,3 +104,39 @@ function displayColor(color) {
       <option value="${color}">${color}</option>
   `
 }
+
+function addPanier(index, colors, id, quantity) {  // C'est une fonction qui vérifie qu'il n'existe pas déja dans notre
+  var colorValide = colors[index - 1]            // storage un élément avec le même id et la même couleur. Si oui il
+  var size = localStorage.length                 // rassemble les deux élément en un élément en additionnant les quantités.
+  var key = id + colorValide
+  let commande = {
+      _id: id,
+      _color: colorValide,
+      _quantity: quantity
+  };
+  
+  if (size === 0) {
+      let tableauString = JSON.stringify(commande);
+      localStorage.setItem(key, tableauString);
+      console.log(localStorage);
+  }
+  else {
+      if (localStorage.getItem(key)) {
+          let sortir = localStorage.getItem(key);
+          let sortirJson = JSON.parse(sortir);
+          let quantity1 = parseInt(commande._quantity);
+          let quantity2 = parseInt(sortirJson._quantity);
+          commande._quantity = quantity1 + quantity2;
+          localStorage.removeItem(key);
+          let tableauString = JSON.stringify(commande);
+          localStorage.setItem(key, tableauString);
+          console.log(localStorage);
+      }
+      else {
+          let tableauString = JSON.stringify(commande);
+          localStorage.setItem(key, tableauString);
+          console.log(localStorage);
+      }
+  }
+}
+

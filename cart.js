@@ -8,8 +8,8 @@ async function displayCart () {
 
   if(taille != 0) {
       for (var i = 0; i < localStorage.length; i++) {
-          let access = localStorage.access(i);
-          let wayOut = localStorage.getItem(access);
+          let key = localStorage.key(i);
+          let wayOut = localStorage.getItem(key);
           let wayoutJson = JSON.parse(wayOut);
           let itemLink = "http://localhost:3000/api/products/" + wayoutJson._id;
           const item = await getProducts(itemLink);
@@ -23,9 +23,9 @@ async function displayCart () {
           }
           console.log(product)  
           displayTab[i] = product;
-          displayProduct(displayTab[i], wayoutJson._color, access)
+          displayProduct(displayTab[i], wayoutJson._color, key)
           if(i == localStorage.length - 1) {
-              removeItem()
+              erase()
               quantityPrice()
               changes()
               checkoutContact()
@@ -33,10 +33,24 @@ async function displayCart () {
       }
   }
   else {
-      alert("Le panier est vide." )
+      // alert("Le panier est vide." )
       return (0);
   }
 }
+
+function getArticle(itemLink) { //fonction qui récupère l'article avec fetch et qui le renvoie que lorsqu'il a reçu la réponse.
+  return fetch(itemLink)
+      .then(function (httpBodyResponse) {
+          return httpBodyResponse.json()
+      })
+      .then(function (items) {
+          return items
+      })
+      .catch(function (error) {
+          alert(error)
+      })     
+}
+
 
 function displayProduct(article, color, id) {
 
@@ -100,6 +114,163 @@ async function quantityPrice() {
     }
     var total = document.getElementById('totalQuantity').innerHTML;
     if (total !="") {
-        
+      document.getElementById('totalQuantity').innerHTML = "";
     }
+    var total2 = document.getElementById('totalQuantity').innerHTML;
+    if (total2 !="") {
+      document.getElementById('totalQuantity').innerHTML = "";
+    }
+
+    document.getElementById("totalQuantity").innerHTML += `
+    ${quantity}
+    `
+    document.getElementById("totalPrice").innerHTML += `
+    ${money}
+    `
 }
+
+function changement() { // fonction qui regarde si il y'a un changement dans les quantités
+  var elements = document.getElementsByClassName("itemQuantity");
+
+  var myFunction = function() {
+      var attribute = this.getAttribute("data-id"); //on récupère le data-id pour voire quel article a été modifié.
+      var concat = '_' + attribute; // l'endroit ou est stocké la valeur du nombre de produit.
+      var valQuantity = document.getElementById(concat).value;
+      console.log(valQuantity)
+      let sortir = localStorage.getItem(attribute);
+      let sortirJson = JSON.parse(sortir);
+      sortirJson._quantity = valQuantity; //on modifie la valeur dans notre objet java.
+      console.log(sortirJson)
+      localStorage.removeItem(attribute); //on suprime notre objet dans le local storage
+      let tableauString = JSON.stringify(sortirJson);
+      localStorage.setItem(attribute, tableauString); // on stoque de nouveau notre objet en lui attribuant la clé de l'objet précedement supprimer.
+      console.log(localStorage)
+      quantityPrice(); //on change la quantité total des articles et le prix total.
+  };
+
+  for (var i = 0; i < elements.length; i++) { //pour l'ensembles des éléments du tableau (get element by class renvoie un tableau)
+      elements[i].addEventListener('change', myFunction, false);
+  }
+}
+
+function ContactCheck() { //vérifie si le formulaire est bien remplie avant de faire la requète POST vers l'api
+  const order = document.getElementById('order');
+  order.addEventListener('click', function()  {
+      console.log("test")
+      const firstName = document.getElementById('firstName').value;
+      const lastName = document.getElementById('lastName').value;
+      const adresse = document.getElementById('address').value;
+      const city = document.getElementById('city').value;
+      const email = document.getElementById('email').value;
+      let store = localStorage.length
+      if (validationFirstName(firstName) === true && validationLastName(lastName) === true) {
+          if (validationAdresse(adresse) === true && validationCity(city) === true) {
+              if (validationMail(email) === true && store != 0) {
+                  postReservaiton(firstName, lastName, adresse, city, email); // envoie la requète post
+              }
+          }
+      }
+      if (store === 0) {
+          alert("Panier vide. Ajoutez des articles!")
+      }
+  });
+}
+
+function validationMail(value) { //vérifie à l'aide de regex que l'adresse mail est composé d'une première partie avec des lettres, des nombres, et quelques signes spéciaux.
+                              // suivie du signe @ puis de nouveau cette sélection suivie d'un . enfin il ne peux y'avoir que deux caractères en lettres après le .
+  var verif = /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]{2,}[.][a-zA-Z]{2,3}$/ ;
+  if (verif.exec(value) == null) {
+      alert("Votre email est incorrecte");
+      return false;
+  }
+  else {
+      return true;
+  }	
+}
+
+function validationFirstName(value) {
+  var verif = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u ; //autorise cette liste de caractère.
+  if (verif.exec(value) == null) {
+      alert("Votre First Name est incorrecte");
+      return false;
+  }
+  else {
+      return true;
+  }
+}
+
+function validationLastName(value) {
+  var verif = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u ;
+  if (verif.exec(value) == null) {
+      alert("Votre Last Name est incorrecte");
+      return false;
+  }
+  else {
+      return true;
+  }
+}
+
+function validationCity(value) {
+  var verif = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u ;
+  if (verif.exec(value) == null) {
+      alert("Votre City est incorrecte");
+      return false;
+  }
+  else {
+      return true;
+  }
+}
+
+function validationAdresse(value) {
+  var verif = /^[a-zA-Z0-9ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð\s,.'-]{3,}$/ ; //même chose mais au mois 3 caractère.
+  if (verif.exec(value) == null) {
+      alert("Votre Adresse est incorrecte");
+      return false;
+  }
+  else {
+      return true;
+  }
+}
+
+async function postReservaiton(first, last, adresse, ville, mail) { // crée le tableau de donnée de contatc
+  let contact = {
+      firstName: first,
+      lastName: last,
+      address: adresse,
+      city: ville,
+      email: mail
+  }
+  let products = [];
+  var i = 0;
+  let key;
+  let sortir;
+  let sortirJson;
+  while (i < localStorage.length) { //on remplis le tableau avec nos valeurs final.
+      key = localStorage.key(i);
+      wayOut = localStorage.getItem(key);
+      wayoutJson = JSON.parse(sortir);
+      products[i] = sortirJson._id;
+      i++;
+  }
+  const aEnvoyer = { //on envoie cet objet et ce tableau à l'api
+      contact,
+      products
+  }
+  envoiePost(aEnvoyer);
+  
+}
+
+
+async function envoiePost(post) {
+  await axios.post("http://localhost:3000/api/products/order", JSON.stringify(post), {headers: {'Content-Type': 'application/json'}}) // on utilise axios pour faire un post vers l'api on privilégie cette méthode qui est plus facile.
+      .then(function(res){
+          const resultat = res
+          const redirection = "./confirmation.html?" + resultat.data.orderId
+          localStorage.clear() //on efface nos valeurs la commande est effectué
+          window.location.href = redirection ; //on redirige l'utilisateur vers la page de confirmation.
+      })
+      .catch(function(err){
+          console.log(err)
+      })
+}
+
