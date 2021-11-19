@@ -1,12 +1,13 @@
 (async function () {
     const items = await getItems()
-    const colors = item.colors;
     
     for (item of items) {
        displayItem(item)
        
     }
-     
+   const colors = item.colors;
+   
+    
    for (color of colors) {
     displayColor(color);
    }
@@ -15,13 +16,13 @@
     addCart.addEventListener('click', function() { //Cette fonction ce déclenche quand l'utilisateur clique sur ajouter au panier
         var selectElem = document.getElementById('colors');
         var index = selectElem.selectedIndex;
-        var idArticle = article._id;
+        var idArticle = item._id;
         var quantity = document.getElementById('quantity').value;
 
         if(index != 0 && quantity > 0) { //on vérifie que la couleur a été choisie et que la quantitée n'est pas à 0
             console.log('top')
             addPanier(index, colors, idArticle, quantity);
-            verifOrdre();
+            // verifOrdre();
         }
         else {
             console.log('nop')
@@ -31,7 +32,7 @@
     });
   })()
 
-
+  
   
   function getItems() {
     return fetch("http://localhost:3000/api/products")

@@ -14,7 +14,7 @@ async function displayCart () {
           let itemLink = "http://localhost:3000/api/products/" + wayoutJson._id;
           const item = await getProducts(itemLink);
           let product = {
-              _id: item._id,
+              id: item._id,
               imageUrl: item.imageUrl,
                 name: item.name,
                 price: parseInt(item.price),
@@ -27,8 +27,8 @@ async function displayCart () {
           if(i == localStorage.length - 1) {
               erase()
               quantityPrice()
-              changes()
-              checkoutContact()
+              change()
+              contactCheck()
           }
       }
   }
@@ -38,7 +38,8 @@ async function displayCart () {
   }
 }
 
-function getArticle(itemLink) { //fonction qui récupère l'article avec fetch et qui le renvoie que lorsqu'il a reçu la réponse.
+
+function getProducts(itemLink) { //fonction qui récupère l'article avec fetch et qui le renvoie que lorsqu'il a reçu la réponse.
   return fetch(itemLink)
       .then(function (httpBodyResponse) {
           return httpBodyResponse.json()
@@ -52,9 +53,9 @@ function getArticle(itemLink) { //fonction qui récupère l'article avec fetch e
 }
 
 
-function displayProduct(article, color, id) {
+function displayProduct(item, color, id) {
 
-    document.getElementById('cart__item').innerHTML += 
+    document.getElementById('cart__items').innerHTML += 
     `<article class="cart__item" data-id="${id}">
     <div class="cart__item__img">
       <img src="${item.imageUrl}" alt="Photographie d'un canapé">
@@ -102,8 +103,8 @@ async function quantityPrice() {
     var quantity = 0
     var money = 0
     for (var i = 0; i < localStorage.length; i++) {
-        let access = localStorage.access(i);
-        let wayOut = localStorage.getItem(access);
+        let key = localStorage.key(i);
+        let wayOut = localStorage.getItem(key);
         let wayoutJson = JSON.parse(wayOut);
         let quantityNb = parseInt(wayoutJson.quantité);
         let itemLink = "http://localhost:3000/api/products/" + wayoutJson._id;
@@ -129,7 +130,7 @@ async function quantityPrice() {
     `
 }
 
-function changement() { // fonction qui regarde si il y'a un changement dans les quantités
+function change() { // fonction qui regarde si il y'a un changement dans les quantités
   var elements = document.getElementsByClassName("itemQuantity");
 
   var myFunction = function() {
@@ -137,12 +138,12 @@ function changement() { // fonction qui regarde si il y'a un changement dans les
       var concat = '_' + attribute; // l'endroit ou est stocké la valeur du nombre de produit.
       var valQuantity = document.getElementById(concat).value;
       console.log(valQuantity)
-      let sortir = localStorage.getItem(attribute);
-      let sortirJson = JSON.parse(sortir);
-      sortirJson._quantity = valQuantity; //on modifie la valeur dans notre objet java.
-      console.log(sortirJson)
+      let wayOut = localStorage.getItem(attribute);
+      let wayoutJson = JSON.parse(wayOut);
+      wayoutJson._quantity = valQuantity; //on modifie la valeur dans notre objet java.
+      console.log(wayoutJson)
       localStorage.removeItem(attribute); //on suprime notre objet dans le local storage
-      let tableauString = JSON.stringify(sortirJson);
+      let tableauString = JSON.stringify(wayoutJson);
       localStorage.setItem(attribute, tableauString); // on stoque de nouveau notre objet en lui attribuant la clé de l'objet précedement supprimer.
       console.log(localStorage)
       quantityPrice(); //on change la quantité total des articles et le prix total.
@@ -153,7 +154,7 @@ function changement() { // fonction qui regarde si il y'a un changement dans les
   }
 }
 
-function ContactCheck() { //vérifie si le formulaire est bien remplie avant de faire la requète POST vers l'api
+function contactCheck() { //vérifie si le formulaire est bien remplie avant de faire la requète POST vers l'api
   const order = document.getElementById('order');
   order.addEventListener('click', function()  {
       console.log("test")
@@ -243,13 +244,13 @@ async function postReservaiton(first, last, adresse, ville, mail) { // crée le 
   let products = [];
   var i = 0;
   let key;
-  let sortir;
-  let sortirJson;
+  let wayOut;
+  let wayoutJson;
   while (i < localStorage.length) { //on remplis le tableau avec nos valeurs final.
       key = localStorage.key(i);
       wayOut = localStorage.getItem(key);
-      wayoutJson = JSON.parse(sortir);
-      products[i] = sortirJson._id;
+      wayoutJson = JSON.parse(wayOut);
+      products[i] = wayoutJson._id;
       i++;
   }
   const aEnvoyer = { //on envoie cet objet et ce tableau à l'api
